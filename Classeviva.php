@@ -2,7 +2,8 @@
 class Classeviva {
     private $baseUrl = 'https://web.spaggiari.eu/rest/v1';
 
-    private function Request ($dir, $data = []) {
+    private function Request ($dir, $data = [])
+    {
         if ($data == []) {
             curl_setopt($this->curl, CURLOPT_POST, false);
         } else {
@@ -19,8 +20,9 @@ class Classeviva {
         return curl_exec ($this->curl);
     }
 
-    public function __construct ($username, $password, $ident = null) {
-        $this->ident = $ident;
+    public function __construct ($username, $password, $identity = null)
+    {
+        $this->ident = $identity;
         $this->username = $username;
         $this->password = $password;
 
@@ -39,7 +41,8 @@ class Classeviva {
         ]);
     }
 
-    public function login () {
+    public function login ()
+    {
         $json = "{
             \"ident\":\"$this->ident\",
             \"pass\":\"$this->password\",
@@ -69,20 +72,119 @@ class Classeviva {
         } else die ('Unknown error');
     }
 
-    public function agenda ($begin, $end, $events = 'all') {
+    public function avatar()
+    {
+        return $this->Request("/auth/avatar");
+    }
+
+    public function status()
+    {
+        return $this->Request('/auth/status');
+    }
+
+    public function ticket()
+    {
+        return $this->Request('/auth/ticket');
+    }
+
+    public function absences($begin = null, $end = null)
+    {
+        if ($start != null) {
+            if ($end != null) {
+                return $this->Request("/students/$this->id/absences/details/$begin/$end");
+            } else {
+                return $this->Request("/students/$this->id/absences/details/$begin");
+            }
+        } else {
+            return $this->Request("/students/$this->id/absences/details");
+        } 
+    }
+
+    public function agenda ($begin, $end, $events = 'all')
+    {
         return $this->Request("/students/$this->id/agenda/$events/$begin/$end");
     }
 
-    public function calendar () {
+    public function didactics($type = null)
+    {
+        if ($type != null) {
+            return $this->Request("/students/$this->id/didactics/item/$type");
+        } else {
+            return $this->Request("/students/$this->id/didactics");
+        }
+    }
+
+    public function noticeBoard($mode = null, $eventCode = null, $pubID = null)
+    {
+        // If mode == 1 read, else attach
+        if ($mode != null) {
+            if($mode) {
+                return $this->Request("/students/$this->id/noticeboard/read/$eventCode/$pubID/101");
+            } else {
+                return $this->Request("/students/$this->id/noticeboard/attach/$eventCode/$pubID/101");
+            }
+            
+        } else {
+            return $this->Request("/students/$this->id/noticeboard");
+        }
+    }
+
+    public function schoolbooks ()
+    {
+        return $this->Request("/students/$this->id/schoolbooks");
+    }
+
+    public function calendar ()
+    {
         return $this->Request("/students/$this->id/calendar/all");
     }
 
-    public function notes () {
+    public function card()
+    {
+        return $this->Request("/students7$this->id/card");
+    }
+
+    public function cards()
+    {
+        return $this->Request("/students7$this->id/cards");
+    }
+
+    public function grades($subject = null)
+    {
+        if ($subject != null) {
+            return $this->Request("/students/$this->id/grades/subject/$subject");
+        } else {
+            return $this->Request("/students/$this->id/grades");
+        }
+    }
+
+    public function lessons($start = null, $end = null)
+    {
+        if ($start != null) {
+            if($end != null) {
+                return $this->Request("/students/$this->id/lessons/$start/$end");
+            } else {
+                return $this->Request("/students/$this->id/lessons/$start");
+            }
+        } else {
+            return $this->Request("/students/$this->id/lessons/today");
+        }        
+    }
+
+    public function notes ()
+    {
         return $this->Request("/students/$this->id/notes/all");
     }
 
-    public function schoolbooks () {
-        return $this->Request("/students/$this->id/schoolbooks");
+    public function periods()
+    {
+        return $this->Request("/students/$this->id/periods");
     }
+
+    public function subjects()
+    {
+        return $this->Request("/students/$this->id/subjects");
+    }
+    
 }
 
