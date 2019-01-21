@@ -13,11 +13,11 @@ class Classeviva {
             ]);
             
         }
-        curl_setopt_array ($this->curl, [
+        curl_setopt_array($this->curl, [
             CURLOPT_URL        => $this->baseUrl.$dir,
         ]);
 
-        return curl_exec ($this->curl);
+        return curl_exec($this->curl);
     }
 
     public function __construct ($username, $password, $identity = null)
@@ -141,12 +141,12 @@ class Classeviva {
 
     public function card()
     {
-        return $this->Request("/students7$this->id/card");
+        return $this->Request("/students/$this->id/card");
     }
 
     public function cards()
     {
-        return $this->Request("/students7$this->id/cards");
+        return $this->Request("/students/$this->id/cards");
     }
 
     public function grades($subject = null)
