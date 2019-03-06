@@ -39,6 +39,8 @@ class Classeviva {
                 'User-Agent: zorro/1.0',
             ),
         ]);
+
+        $this->login();
     }
 
     public function login ()
