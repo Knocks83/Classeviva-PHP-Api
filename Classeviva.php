@@ -52,8 +52,6 @@ class Classeviva {
         }";
         $response = json_decode($this->Request('/auth/login',$json));
 
-        print_r($response);
-
         if(isset($response->token)) {
             if($this->ident == null) {
                 $this->ident = $response->ident;
