@@ -91,7 +91,7 @@ class Classeviva {
 
     public function absences($begin = null, $end = null)
     {
-        if ($start != null) {
+        if ($begin != null) {
             if ($end != null) {
                 return $this->Request("/students/$this->id/absences/details/$begin/$end");
             } else {
