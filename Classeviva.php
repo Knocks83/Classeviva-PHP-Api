@@ -52,10 +52,8 @@ class Classeviva {
         }";
         $response = json_decode($this->Request('/auth/login',$json));
 
-        if(isset($response->token)) {
-            if($this->ident == null) {
-                $this->ident = $response->ident;
-            }
+        if(!property_exists($response, 'error') && isset($response->token)) {
+            $this->ident = $response->ident;
             $this->firstName = $response->firstName;
             $this->lastName = $response->lastName;
             $this->token = $response->token;
@@ -68,8 +66,8 @@ class Classeviva {
             ));
 
         } elseif (isset($response->error)) {
-            die($response->error);
-        } else die ('Unknown error');
+            throw new Exception($response->error, 2);
+        } else throw new Exception("Unknown error", 2);
     }
 
     public function avatar()
@@ -105,10 +103,10 @@ class Classeviva {
         return $this->Request("/students/$this->id/agenda/$events/$begin/$end");
     }
 
-    public function didactics($type = null)
+    public function didactics($id = null)
     {
-        if ($type != null) {
-            return $this->Request("/students/$this->id/didactics/item/$type");
+        if ($id != null) {
+            return $this->Request("/students/$this->id/didactics/item/$id");
         } else {
             return $this->Request("/students/$this->id/didactics");
         }
@@ -185,6 +183,39 @@ class Classeviva {
     {
         return $this->Request("/students/$this->id/subjects");
     }
+
+    public static function convertClassevivaAgenda(string $classevivaAgenda)
+    {
+        $classevivaAgenda = json_decode($classevivaAgenda);
+        $classevivaEvents = array();
+
+        foreach ($classevivaAgenda->agenda as $event) {
+            $convertedEvent = new ClassevivaEvent($event->evtId, $event->evtCode,
+                $event->evtDatetimeBegin, $event->evtDatetimeEnd, $event->notes,
+                $event->authorName, $event->classDesc, $event->subjectId, $event->subjectDesc
+            );
+
+            array_push($classevivaEvents, $convertedEvent);
+        }
+
+        return $classevivaEvents;
+    }
     
 }
 
+class ClassevivaEvent  
+{
+    public function __construct(string $id, string $evtCode, string $evtDatetimeBegin,
+        string $evtDatetimeEnd, string $notes, string $authorName, string $classDesc,
+        $isFullDay = false, $subjectid = null, $subjectDesc = null)
+    {
+        $this->id = $id;
+        $this->evtCode = $evtCode;
+        $this->evtDatetimeBegin = $evtDatetimeBegin;
+        $this->evtDatetimeEnd = $evtDatetimeEnd;
+        $this->notes = $notes;
+        $this->authorName = $authorName;
+        $this->classDesc = $classDesc;
+        $this->fullDay = $isFullDay;
+    }
+}
