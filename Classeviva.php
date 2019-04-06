@@ -66,7 +66,7 @@ class Classeviva {
             ));
 
         } elseif (isset($response->error)) {
-            throw new Exception($response->error, 2);
+            throw new Exception($response->error.PHP_EOL, 2);
         } else throw new Exception("Unknown error", 2);
     }
 
