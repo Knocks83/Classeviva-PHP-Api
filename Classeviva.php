@@ -1,4 +1,8 @@
 <?php
+namespace Knocks\Classeviva\Students;
+
+use Exception;
+
 class Classeviva {
     private $baseUrl = 'https://web.spaggiari.eu/rest/v1';
 
@@ -147,13 +151,9 @@ class Classeviva {
         return $this->Request("/students/$this->id/cards");
     }
 
-    public function grades($subject = null)
+    public function grades()
     {
-        if ($subject != null) {
-            return $this->Request("/students/$this->id/grades/subject/$subject");
-        } else {
-            return $this->Request("/students/$this->id/grades");
-        }
+        return $this->Request("/students/$this->id/grades");
     }
 
     public function lessons($start = null, $end = null)
